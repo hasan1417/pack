@@ -48,4 +48,6 @@ var abi = [
 
 var con = new gateway.eth.Contract(abi,'0x444C514e0AE9dA12Db399A2d30124ADbB96f8EC4')
 
-const privateKey
+const privateKey = new Buffer.from('238ac0d1df6546ace3f62cfc8022caf1305d28bd7a474b67f085f4eedb9ff2d0','hex')
+
+console.log(privateKey)
