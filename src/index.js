@@ -51,3 +51,21 @@ var con = new gateway.eth.Contract(abi,'0x444C514e0AE9dA12Db399A2d30124ADbB96f8E
 const privateKey = new Buffer.from('238ac0d1df6546ace3f62cfc8022caf1305d28bd7a474b67f085f4eedb9ff2d0','hex')
 
 console.log(privateKey)
+
+const txParams = {
+    from: '0x20f2E66DA9315D447b22059F154ed1E016d41369',
+    nonce: '',
+    gasPrice: '',
+    gasLimit: '',
+    to: '0x9b1B39881355869821f83096eB1a2B9B4DF15286',
+    value: '0x00',
+    data: '',
+  }
+
+  const tx = new Transaction(txParams, {'chain': 'rinkeby'})
+
+  tx.sign(privateKey,'0x20f2E66DA9315D447b22059F154ed1E016d41369')
+
+  const serializedTx = tx.serialize()
+
+  gateway.eth.sendSignedTransaction('0x'+serializedTx.toString('hex')).on('receipt',console.log)
