@@ -53,23 +53,27 @@ const privateKey = new Buffer.from('238ac0d1df6546ace3f62cfc8022caf1305d28bd7a47
 
 // console.log(privateKey)
 
-// const txParams = {
-//     from: '0x20f2E66DA9315D447b22059F154ed1E016d41369',
-//     nonce: '',
-//     gasPrice: '',
-//     gasLimit: '',
-//     to: '0x9b1B39881355869821f83096eB1a2B9B4DF15286',
-//     value: '0x00',
-//     data: '',
-//   }
+const txParams = {
+    from: '0x20f2E66DA9315D447b22059F154ed1E016d41369',
+    nonce: '0x0c',
+    gasPrice: '0x4a717c800',
+    gasLimit: '0xc340',
+    to: '0x9b1B39881355869821f83096eB1a2B9B4DF15286',
+    value: '0x00',
+    data: '0x',
+  }
 
-//   const tx = new Transaction(txParams, {'chain': 'rinkeby'})
 
-//   tx.sign(privateKey,'0x20f2E66DA9315D447b22059F154ed1E016d41369')
 
-//   const serializedTx = tx.serialize()
+  const tx = new Transaction(txParams)
 
-//   infuraProvider.sendTransaction('0x'+serializedTx.toString('hex'))
+  // console.log(tx)
+
+  // tx.sign(privateKey,'0x20f2E66DA9315D447b22059F154ed1E016d41369')
+
+  // const serializedTx = tx.serialize()
+
+
 
 const infuraProvider = new ethers.providers.InfuraProvider('rinkeby', '0f3d9f30356e48c7b048c0b6a6c8ceae');
 const wallet = new ethers.Wallet(privateKey, infuraProvider);
@@ -79,40 +83,10 @@ const signer = wallet.connect(infuraProvider);
 // contract.functions.claimStar()
 
 // contract.functions.starOwner().then(data=>console.log(data))
+  // infuraProvider.sendTransaction('0x'+serializedTx.toString('hex'))
+  // infuraProvider.getTransactionCount('0x20f2E66DA9315D447b22059F154ed1E016d41369').then(nonce => console.log(ethers.utils.hexlify(nonce)))
 
-const sendEths = async ({
-    to,
-    from,
-    fromPrivateKey,
-    value,
-    gasPrice,
-    gasLimit = ethers.utils.hexlify(21000),
-  }) => {
-    const txCount = await infuraProvider.getTransactionCount(from);
-    // build the transaction
-    const tx = new Transaction({
-      nonce: ethers.utils.hexlify(txCount),
-      to,
-      value: ethers.utils.parseEther(value),
-      gasLimit,
-      gasPrice,
-    });
-    // sign the transaction
-    tx.sign(Buffer.from(fromPrivateKey, "hex"));
-    // send the transaction
-    const { hash } = await infuraProvider.sendTransaction(
-      "0x" + tx.serialize().toString("hex")
-    );
-    await infuraProvider.waitForTransaction(hash);
-  };
-
-  var abicode = new ethers.utils.AbiCoder
-//   sendEths({
-//       to: '0x9b1B39881355869821f83096eB1a2B9B4DF15286',
-//       from:'0x20f2E66DA9315D447b22059F154ed1E016d41369',
-//       fromPrivateKey:privateKey,
-//       value:'1',
-//       gasPrice:'0x00'
-//   })
-
-  console.log(Transaction.gasPrice)
+  signer.signTransaction(txParams).then(signedTx => {
+    console.log(signedTx)
+    infuraProvider.sendTransaction(signedTx).then(data=>console.log(data))
+  })
